@@ -1,0 +1,45 @@
+body {
+    width: 350px;
+  }
+  
+  .container {
+    max-width: 300px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  h1 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+  }
+  
+  input[type="time"],
+  input[type="text"],
+  button {
+    display: block;
+    margin-bottom: 10px; /* 요소들 사이의 간격을 조정합니다. */
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  input[type="time"],
+  input[type="text"] {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
