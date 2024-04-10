@@ -18,10 +18,8 @@ body {
   input[type="time"],
   input[type="text"],
   button {
-    display: block;
     margin-bottom: 10px; /* 요소들 사이의 간격을 조정합니다. */
     padding: 8px;
-    width: 100%;
     box-sizing: border-box;
   }
   
@@ -29,6 +27,11 @@ body {
   input[type="text"] {
     border: 1px solid #ccc;
     border-radius: 3px;
+  }
+
+  input[type="time"] {
+    display: block;
+    width: 100%;
   }
   
   button {
@@ -43,3 +46,12 @@ body {
     background-color: #0056b3;
   }
   
+  #selector,
+  #selectElement {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  #selector {
+    width: 75%;
+  }

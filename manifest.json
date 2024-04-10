@@ -1,15 +1,17 @@
 {
   "manifest_version": 2,
-  "name": "특정 시간에 클릭",
+  "name": "Click On Time",
   "version": "1.0",
-  "permissions": ["tabs", "activeTab", "*://*/*"],
+  "permissions": ["storage", "tabs", "activeTab", "*://*/*"],
   "background": {
-    "scripts": ["background.js"],
-    "persistent": false
+    "service_worker": "background.js"
   },
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": "icon.png"
+  },
+  "icons": {
+    "128": "icon.png"
   },
   "content_scripts": [
     {
