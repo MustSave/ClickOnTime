@@ -7,16 +7,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         const handleClick = ev => {
             ev.stopImmediatePropagation();
             ev.preventDefault();
-            
-            document.querySelector("body").removeEventListener("click", handleClick);
+
+            document.querySelector("body").removeEventListener("click", handleClick, { capture: true });
             const el = ev.target;
             const selector = getSelector(el);
-            
+
             alert("선택되었습니다.");
             chrome.runtime.sendMessage({ action: "onSelect", data: selector });
         }
 
-        document.querySelector("body").addEventListener("click", handleClick);
+        document.querySelector("body").addEventListener("click", handleClick, { capture: true });
     }
 });
 
@@ -26,7 +26,7 @@ function waitBeforeTime(selector, time) {
 
     interval = setInterval(function () {
         var currentTime = new Date();
-        var targetTime = new Date(`${currentTime.getFullYear()}-${String(currentTime.getMonth()+1).padStart(2, '0')}-${String(currentTime.getDate()).padStart(2, '0')}T${time}`);
+        var targetTime = new Date(`${currentTime.getFullYear()}-${String(currentTime.getMonth() + 1).padStart(2, '0')}-${String(currentTime.getDate()).padStart(2, '0')}T${time}`);
         // console.log(time, currentTime, targetTime);
 
         if (currentTime.getTime() >= targetTime.getTime()) {
