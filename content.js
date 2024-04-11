@@ -18,11 +18,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
 });
 
-let interval;
+const intervalMap = {};
 function waitBeforeTime(selector, time) {
-    if (interval) clearInterval(interval);
+    const key = selector + time;
+    if (intervalMap[key]) return;
 
-    interval = setInterval(function () {
+    const interval = setInterval(function () {
         var currentTime = new Date();
         var targetTime = new Date(`${currentTime.getFullYear()}-${String(currentTime.getMonth() + 1).padStart(2, '0')}-${String(currentTime.getDate()).padStart(2, '0')}T${time}`);
         // console.log(time, currentTime, targetTime);
@@ -30,9 +31,10 @@ function waitBeforeTime(selector, time) {
         if (currentTime.getTime() >= targetTime.getTime()) {
             document.querySelector(selector)?.click();
             clearInterval(interval);
-            interval = null;
+            delete intervalMap[key];
         }
     }, 1000);
+    intervalMap[key] = interval;
 }
 
 function getSelector(el) {
