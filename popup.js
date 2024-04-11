@@ -5,8 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
         var targetTime = document.getElementById("targetTime").value;
         var selector = document.getElementById("selector").value; // 사용자가 입력한 셀렉터 가져오기
 
-        localStorage.setItem("targetTime", targetTime);
-
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
             if (tabs.length === 0) {
                 console.log("No active tab");
@@ -16,6 +14,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
             window.close();
         });
+    });
+
+    document.getElementById("targetTime").addEventListener("change", ev => {
+        localStorage.setItem("targetTime", ev.target.value);
     });
 
     var targetTime = localStorage.getItem("targetTime");
