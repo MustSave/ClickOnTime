@@ -4,19 +4,17 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     } else if (request.action === "doSelect") {
         alert("선택할 요소를 클릭하세요");
 
-        const handleClick = ev => {
-            ev.stopImmediatePropagation();
-            ev.preventDefault();
+        // 요소에 마우스 오버 이벤트 리스너 추가
+        document.body.addEventListener('mouseover', handleMouseOverEvent);
 
-            document.querySelector("body").removeEventListener("click", handleClick, { capture: true });
-            const el = ev.target;
-            const selector = getSelector(el);
+        // 요소에서 마우스가 벗어날 때 하이라이트 제거
+        document.body.addEventListener('mouseout', handleMouseOutEvent);
 
-            alert("선택되었습니다.");
-            chrome.runtime.sendMessage({ action: "onSelect", data: selector });
-        }
+        // 요소를 클릭할 때 하이라이트 제거
+        document.body.addEventListener('click', handleClickEvent, { capture: true });
 
-        document.querySelector("body").addEventListener("click", handleClick, { capture: true });
+        // 우클릭 이벤트 발생 시 하이라이트 제거
+        document.body.addEventListener('contextmenu', handleContextMenuEvent, { capture: true });
     }
 });
 
@@ -52,4 +50,70 @@ function getSelector(el) {
         el = el.parentElement;
     }
     return names.join(">");
+}
+
+const highlightStyle = `
+    position: absolute;
+    pointer-events: none;
+    background-color: rgba(255, 255, 0, 0.3);
+    border: 2px solid rgba(255, 255, 0, 0.5);
+    z-index: 999999;
+`;
+
+// 요소 강조를 위한 공통 함수
+function highlightElement(target) {
+    const rect = target.getBoundingClientRect();
+    const highlight = document.createElement('div');
+    highlight.style.cssText = `
+        ${highlightStyle}
+        top: ${rect.top + window.scrollY}px;
+        left: ${rect.left + window.scrollX}px;
+        width: ${rect.width}px;
+        height: ${rect.height}px;
+    `;
+    document.body.appendChild(highlight);
+    target.__highlight__ = highlight;
+}
+
+const handleMouseOverEvent = event => {
+    highlightElement(event.target);
+}
+
+const handleMouseOutEvent = event => {
+    removeHighlight(event.target);
+}
+
+const removeEventListeners = () => {
+    document.body.removeEventListener('contextmenu', handleContextMenuEvent, { capture: true });
+    document.body.removeEventListener('click', handleClickEvent, { capture: true });
+    document.body.removeEventListener('mouseover', handleMouseOverEvent);
+    document.body.removeEventListener('mouseout', handleMouseOutEvent);
+}
+
+const handleClickEvent = event => {
+    clearSelectEvent(event);
+
+    const selector = getSelector(event.target);
+    chrome.runtime.sendMessage({ action: "onSelect", data: selector });
+
+    alert("선택되었습니다.");
+}
+
+const handleContextMenuEvent = event => {
+    clearSelectEvent(event);
+}
+
+function clearSelectEvent(event) {
+    event.stopImmediatePropagation();
+    event.preventDefault();
+    removeEventListeners();
+    removeHighlight(event.target);
+}
+
+// 요소 강조를 제거하는 공통 함수
+function removeHighlight(target) {
+    if (target !== document.body && target.__highlight__) {
+        target.__highlight__.parentNode.removeChild(target.__highlight__);
+        delete target.__highlight__;
+    }
 }
