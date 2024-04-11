@@ -1,57 +1,74 @@
+/* styles.css */
 body {
-    width: 350px;
-  }
-  
-  .container {
-    max-width: 300px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  h1 {
-    font-size: 1.5em;
-    margin-bottom: 20px;
-  }
-  
-  input[type="time"],
-  input[type="text"],
-  button {
-    margin-bottom: 10px; /* 요소들 사이의 간격을 조정합니다. */
-    padding: 8px;
-    box-sizing: border-box;
-  }
-  
-  input[type="time"],
-  input[type="text"] {
-    border: 1px solid #ccc;
-    border-radius: 3px;
-  }
+  width: 350px;
+}
 
-  input[type="time"] {
-    display: block;
-    width: 100%;
-  }
-  
-  button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  #selector,
-  #selectElement {
-    display: inline-block;
-    vertical-align: top;
-  }
+.container {
+  max-width: 300px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
-  #selector {
-    width: 75%;
-  }
+h1 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+input[type="time"],
+input[type="text"],
+button {
+  margin-bottom: 10px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+input[type="time"],
+input[type="text"] {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+input[type="time"] {
+  display: block;
+  width: 100%;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#selector,
+#selectElement {
+  display: inline-block;
+  vertical-align: top;
+}
+
+#selector {
+  width: 75%;
+}
+
+/* New CSS for radio options */
+.radio-options {
+  margin-bottom: 10px;
+  white-space: nowrap; /* Prevent line breaks */
+}
+
+.radio-options input[type="radio"] {
+  margin-right: 5px;
+  display: inline-block; /* Display radio buttons inline */
+}
+
+.radio-options label {
+  margin-right: 15px;
+  display: inline-block; /* Display labels inline */
+}

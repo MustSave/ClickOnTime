@@ -1,6 +1,6 @@
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.action === "clickButton") {
-        waitBeforeTime(request.selector, request.targetTime);
+        waitBeforeTime(request.selector, request.targetTime, request.timeSource);
     } else if (request.action === "doSelect") {
         alert("선택할 요소를 클릭하세요");
 
@@ -19,22 +19,50 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 const intervalMap = {};
-function waitBeforeTime(selector, time) {
+async function waitBeforeTime(selector, time, timeSource) {
     const key = selector + time;
-    if (intervalMap[key]) return;
+    if (intervalMap[key]) clearInterval(intervalMap[key]);
+    let targetTime, timeDiff = 0;
+    const currentTime = new Date();
+
+    if (timeSource === "local") {
+        targetTime = new Date(`${currentTime.getFullYear()}-${String(currentTime.getMonth() + 1).padStart(2, '0')}-${String(currentTime.getDate()).padStart(2, '0')}T${time}`);
+        timeDiff = 0;
+    } else if (timeSource === "server") {
+        const res = await fetch("/").catch(() => {
+            const map = new Map();
+            map.set("Date", new Date());
+            return { headers: map };
+        });
+        const dateHeader = res.headers.get("Date");
+        if (!dateHeader) alert("서버에서 시간을 가져올 수 없어 로컬 컴퓨터 시간으로 계산됩니다.");
+        const serverTime = dateHeader ? new Date(dateHeader) : new Date();
+        targetTime = new Date(`${serverTime.getFullYear()}-${String(serverTime.getMonth() + 1).padStart(2, '0')}-${String(serverTime.getDate()).padStart(2, '0')}T${time}`);
+        timeDiff = serverTime.getTime() - currentTime.getTime();
+    } else if (timeSource === "external") {
+        const json = await fetch("https://worldtimeapi.org/api/ip")
+            .then(res => res.json())
+            .catch(() => { datetime: new Date().getTime() });
+        const serverTime = new Date(json.datetime);
+        targetTime = new Date(`${serverTime.getFullYear()}-${String(serverTime.getMonth() + 1).padStart(2, '0')}-${String(serverTime.getDate()).padStart(2, '0')}T${time}`);
+        timeDiff = serverTime.getTime() - currentTime.getTime();
+    }
+
+    console.log(timeSource, targetTime, timeDiff);
 
     const interval = setInterval(function () {
-        var currentTime = new Date();
-        var targetTime = new Date(`${currentTime.getFullYear()}-${String(currentTime.getMonth() + 1).padStart(2, '0')}-${String(currentTime.getDate()).padStart(2, '0')}T${time}`);
-        // console.log(time, currentTime, targetTime);
-
-        if (currentTime.getTime() >= targetTime.getTime()) {
+        if (checkTimeOver(targetTime, timeDiff)) {
             document.querySelector(selector)?.click();
             clearInterval(interval);
             delete intervalMap[key];
         }
     }, 1000);
     intervalMap[key] = interval;
+}
+
+function checkTimeOver(targetTime, timeDiff) {
+    const currentTime = new Date(new Date().getTime() + timeDiff);
+    return currentTime.getTime() >= targetTime.getTime();
 }
 
 function getSelector(el) {

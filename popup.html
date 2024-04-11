@@ -1,3 +1,4 @@
+<!-- popup.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,7 +12,15 @@
     <h1>특정 시간에 클릭</h1>
     <label for="targetTime">시간:</label>
     <input type="time" id="targetTime" value="18:03"/>
-    <br>
+    <label>시간 소스:</label>
+    <div class="radio-options">
+      <input type="radio" id="localTime" name="timeSource" value="local" checked>
+      <label for="localTime">로컬 컴퓨터</label>
+      <input type="radio" id="serverTime" name="timeSource" value="server">
+      <label for="serverTime">서버</label>
+      <input type="radio" id="externalTime" name="timeSource" value="external">
+      <label for="externalTime">외부 서버</label>
+    </div>
     <input type="text" id="selector" placeholder="클릭할 요소의 셀렉터를 입력하세요" value="#checkOut"/>
     <button id="selectElement">선택하기</button>
     <button id="startTimer">타이머 시작</button>
