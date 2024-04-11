@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("startTimer").addEventListener("click", function () {
         if (!confirm("확인을 누르면 타이머가 시작됩니다.")) return;
-        
+
         var targetTime = document.getElementById("targetTime").value;
         var selector = document.getElementById("selector").value; // 사용자가 입력한 셀렉터 가져오기
 
@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
             chrome.tabs.sendMessage(tabs[0].id, { action: "clickButton", selector, targetTime });
+
+            window.close();
         });
     });
 
