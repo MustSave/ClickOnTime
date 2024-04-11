@@ -29,7 +29,7 @@ async function waitBeforeTime(selector, time, timeSource) {
         targetTime = new Date(`${currentTime.getFullYear()}-${String(currentTime.getMonth() + 1).padStart(2, '0')}-${String(currentTime.getDate()).padStart(2, '0')}T${time}`);
         timeDiff = 0;
     } else if (timeSource === "server") {
-        const res = await fetch("/").catch(() => {
+        const res = await fetch("/", { cache: "no-store" }).catch(() => {
             const map = new Map();
             map.set("Date", new Date());
             return { headers: map };
@@ -40,7 +40,7 @@ async function waitBeforeTime(selector, time, timeSource) {
         targetTime = new Date(`${serverTime.getFullYear()}-${String(serverTime.getMonth() + 1).padStart(2, '0')}-${String(serverTime.getDate()).padStart(2, '0')}T${time}`);
         timeDiff = serverTime.getTime() - currentTime.getTime();
     } else if (timeSource === "external") {
-        const json = await fetch("https://worldtimeapi.org/api/ip")
+        const json = await fetch("https://worldtimeapi.org/api/ip", { cache: "no-store" })
             .then(res => res.json())
             .catch(() => { datetime: new Date().getTime() });
         const serverTime = new Date(json.datetime);
